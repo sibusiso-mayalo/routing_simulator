@@ -1,0 +1,39 @@
+body
+{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:15px;
+	line-height:1.5;
+	background-color: #f4f4f4
+	text-align: center;
+}
+nav 
+{
+    text-align: center;
+    backgound: #191919;
+	background-color: orange;
+	margin-bottom: #DFE2DB 3px solid;
+}
+header
+{
+	backgound: #191919;
+	color: #ffffff;
+	margin-bottom: #DFE2DB 3px solid;
+}
+
+
+ul li
+{
+	text-align: center;
+	font-wight: bold;
+	display: inline;
+	padding 0 10px 0 10px;
+}
+
+footer
+{
+    text-align: center;
+    font-weight: bold;
+    width: 100%
+    background: #191919
+    color: #FFFFFF
+}

@@ -1,0 +1,19 @@
+<!doctype html>
+<title>{% block title %}{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='stylesheet.css') }}">
+<nav>
+  <h1>Inter-domain Routing Simulator</h1>
+  <ul>
+      <li><a href="{{ url_for('index') }}">Home</a>
+      <li><a href="{{ url_for('edit') }}">Edit</a>
+  </ul>
+</nav>
+<section class="content">
+  <header>
+    {% block header %}{% endblock %}
+  </header>
+  {% block content %}{% endblock %}
+</section>
+<footer>
+	<p>&copy; NoName Group 2019. All rights reserved
+</footer>
