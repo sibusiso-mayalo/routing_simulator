@@ -13,3 +13,9 @@ class Node:
 		
 	def update_fwdTable(self, destinationNode, nextHop):
 		self.forwardTable[destinationNode] = nextHop
+	
+	def getInfo(self):
+		info = dict()
+		info["ID"] = self.ID
+		info["Type"] = self.type
+		return info
