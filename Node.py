@@ -6,16 +6,16 @@ class Node:
 		self.edges = dict()
 		self.relType = dict()
 		self.forwardTable = dict()
-		
+
 	def populateNode(self, destinationNode, relType, cost, delay):
 		self.edges[destinationNode] = (cost,delay)
 		self.relType[destinationNode] = relType
-		
+
 	def update_fwdTable(self, destinationNode, nextHop):
 		self.forwardTable[destinationNode] = nextHop
-	
+
 	def getInfo(self):
 		info = dict()
-		info["ID"] = self.ID
+		info["id"] = self.ID
 		info["Type"] = self.type
 		return info
