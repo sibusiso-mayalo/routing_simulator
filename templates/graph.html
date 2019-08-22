@@ -1,12 +1,81 @@
-{% extends 'base_layout.html' %}
-{% block javascript %}
-    <script 
-    	src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js'>
-    </script>
-	<script 
-		src="graph.js">
-	</script>
-{% endblock %}
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <!-- Load d3.js -->
+  <script src="https://d3js.org/d3.v4.js"></script>
+  <script>
+    function draw(data)
+    {
+      //Dimention of the visualization
+      var margin = {top:10, bottom:30, left:40,right:30},
+        width = 400 - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom;
 
-{% block content %} {{ body }} {% endblock %}
+      //Container to hold the graph: Scalable Vector Graphics
+      //Same size as our screen dimension above
+      var svg = d3.select('#graphHolder')
+        .append('svg')
+      	   .attr('width',width + margin.left + margin.right)
+      	   .attr('height',height + margin.top + margin.bottom)
+      	.append('g')
+      	   .attr('transform', 'translate('+margin.left+','+margin.top+')');
+      	//.style("border", "1px solid black");
 
+      		//Initialize the links
+      var link = svg
+        .selectAll('line')
+        .data(data.links)
+      	.enter()
+      	.append('line')
+      	.style('stroke','#aaa');
+
+      		//Initialize nodes
+      var node = svg.selectAll('circle')
+      	.data(data.nodes)
+      	.enter()
+      	.append('circle')
+        .attr('r', 20)
+        .style('fill', '#69b3a2');
+
+      var text = svg.append("g")
+        .selectAll("text")
+        .data(data.nodes)
+        .enter().append("text")
+        .attr("dx", 12)
+        .attr("dy", ".35em")
+        .text(function(d) { return d.id });
+
+      		//Listing the force that will be applied on the network
+      var simulation = d3.forceSimulation(data.nodes)
+      	.force('link', d3.forceLink()
+      	.id(function(d){return d.id;})
+      	.links(data.links))
+      	.force('charge', d3.forceManyBody().strength(-400))
+      	.force('center', d3.forceCenter(width/2, height/2))
+        .on('end', ticked);
+
+      function ticked()
+      {
+        link
+          .attr('x1', function(d){return d.source.x;})
+      		.attr('y1', function(d){return d.source.y;})
+      		.attr('x2', function(d){return d.target.x;})
+      		.attr('y2', function(d){return d.target.y;});
+
+      	node
+          .attr('cx', function(d){return d.x + 6;})
+      		.attr('cy', function(d){return d.y - 6;});
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <!-- Create a div where the graph will take place -->
+  <div id="graphHolder"></div>
+  <script>
+    d3.json("{{url_for('static', filename='testFile.json')}}", draw);
+  </script>
+
+</body>
+</html>
