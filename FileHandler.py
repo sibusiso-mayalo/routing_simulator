@@ -4,39 +4,32 @@ class FileHandler:
         self.fileName = str(fileName)
         self.extensions = ['csv','txt','xls']
         self.nodes = list()
-        
+
     def get_fileExtension(self):
         return str(self.fileName.split('.')[1])
-        
+
     def validate_file(self):
         #validate extenstion
         validation_status = True
-  
+
         if self.get_fileExtension() in self.extensions:
             #read and validate for missing information
             with open(self.fileName) as fileObj:
                 for lines in fileObj:
-                    contents = lines.split(",")
+                    contents = lines.strip().split(",")
 
-                    source = str(contents[0])
-                    destination = str(contents[1])
-                    rel_type = str(contents[2])
-                    cost = str(contents[3])
-                    delay = str(contents[4])
-                    
-                    if (not source) or (not destination) or(not rel_type) or (not cost) or (not delay):
+                    if contents[0]=='': #empty line
+                        pass
+                    elif len(contents) ==2 or len(contents)==5:
+                        #2 indicates node+type, 4 indicates src,dest,cost,delay
+                        pass
+                    else:
                         validation_status = False
                         break
-                    else:
-                        self.nodes.append(list(lines))
-                    
-                    
         else:
             validation_status = False
-         
         return validation_status
-            
+
 if __name__ == "__main__":
-    test = fileHandler('testFile.txt')
+    test = FileHandler('testFile.txt')
     print(test.validate_file())
-        
