@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <head>
   <meta charset="utf-8">
-  <!-- Load d3.js -->
   <script src="https://d3js.org/d3.v4.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='graph.css') }}">
   <script>
     function draw(data)
     {
@@ -68,14 +68,40 @@
       }
     }
   </script>
+  <nav>
+    <h1>Inter-domain Routing Simulator</h1>
+  <nav>
 </head>
 
 <body>
   <!-- Create a div where the graph will take place -->
-  <div id="graphHolder"></div>
+  <div id="graphHolder" align='center'></div>
   <script>
     d3.json("{{url_for('static', filename='testFile.json')}}", draw);
   </script>
+  <div class='searchComponents' align='center'>
+      <label for='src'>Source</label>
+      <select name='source' required>
+          <option value=''></option>
+      </select>
 
+      <br><br>
+      <label for='dest'>Desination</label>
+      <select name='destination' required>
+          <option value=''></option>
+      </select>
+
+      <br><br>
+      <label for='crt'>Criteria</label>
+      <select name='criteria' required>
+          <option value=''></option>
+      </select>
+      <br><br>
+      <button type="button">Search</button>
+
+  </div>
 </body>
+<footer>
+	<p>&copy; NoName Group 2019. All rights reserved
+</footer>
 </html>
