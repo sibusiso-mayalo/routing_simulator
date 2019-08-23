@@ -49,7 +49,4 @@ def render_form():
 @app.route('/graph')
 def graph():
     send_from_directory('static','testFile.json')
-    return render_template('graph.html', body="""<div id='graphHolder'></div>
-    <script
-		src='graph.js'>
-	</script>""")
+    return render_template('graph.html')
