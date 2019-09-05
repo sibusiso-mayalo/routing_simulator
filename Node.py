@@ -1,21 +1,17 @@
 class Node:
 
-	def __init__(self, nodeID, nodeType):
-		self.ID = nodeID
-		self.type=nodeType
-		self.edges = dict()
-		self.relType = dict()
-		self.forwardTable = dict()
+    def __init__(self, nodeID=str(), nodeType=str() ):
+        self.ID=nodeID
+        self.type=self.set_type(nodeType)
+        self.edges=dict()
 
-	def populateNode(self, destinationNode, relType, cost, delay):
-		self.edges[destinationNode] = (cost,delay)
-		self.relType[destinationNode] = relType
+    def set_type(self, new_type):
+        self.type = new_type
 
-	def update_fwdTable(self, destinationNode, nextHop):
-		self.forwardTable[destinationNode] = nextHop
+    def add_edge(self, destination, cost, delay, rel_type):
+        temp_list = list()
+        temp_list.append(cost)
+        temp_list.append(delay)
 
-	def getInfo(self):
-		info = dict()
-		info["id"] = self.ID
-		info["Type"] = self.type
-		return info
+        self.set_type(rel_type)
+        self.edges[destination] = temp_list
