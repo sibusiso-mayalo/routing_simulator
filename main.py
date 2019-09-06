@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, send_from_directory, url_for
 from werkzeug.utils import secure_filename
 from FileHandler import *
 from Strings import *
+from RunGraph import *
 
 app = Flask(__name__)
 strings = String()
@@ -45,6 +46,23 @@ def sendFile():
 
 def render_form():
     return render_template('upload_form.html', form = strings.form)
+
+@app.route('/graph', methods=["POST"])
+def get_nodes():
+    if request.method =="POST":
+        source_node = request.form['source']
+        destination = request.form['destination']
+
+        search_results = RunGraph.get_results(source_node, destination)
+        if type(search_results) == 'dict()':
+            path = search_results['path']
+            cost = search_results['cost']
+            # send to JS to be displayed
+
+        else:
+            #Either no path or there has been a validation of rules
+            #send validation error message to UI
+            print ""
 
 @app.route('/graph')
 def graph():
