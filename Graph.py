@@ -6,6 +6,7 @@ class Graph:
         self.nodes = nodes
 
     def calculate_path(self, start_node, destination_node):
+        #A* Search Algorithm
         frontier = PriorityQueue()
         frontier.put(start_node, 0)
 
@@ -33,6 +34,7 @@ class Graph:
         return came_from, cost_so_far
 
     def heuristic(self, dest_node, current_node):
+        #Calculate heuristic: cost so far + cost to dest
         estimate = 0
         for enum in Conversions:
             if dest_node.type == str(enum).split('.')[1]:
@@ -51,7 +53,6 @@ class Graph:
 
             if (i+1) == len_array:
                 #This means that the 'next_node' is the target node
-                #So we can forward to this destination
                 forward = True
                 break
 
@@ -64,6 +65,7 @@ class Graph:
         return forward
 
     def reconstruct_path(self, came_from, start, goal):
+        #Reverse the path found to start from source to destination node
         current= goal.ID
         path = []
 
