@@ -2,38 +2,36 @@ from Node import *
 import json, sys
 class Extract:
 
-    def __init__(self, fileName):
-        self.nodes = list()
-        self.edges = list() #for graph drawing purpose only
-        self.fileName = fileName
-
+    def __init__(self, filename='testFile.txt'):
+        self.filename = filename
+        self.nodes = dict()
+        self.extractData()
 
     def extractData(self):
         try:
-            with open(self.fileName) as fileObj:
+            with open(self.filename) as fileObj:
                 for lines in fileObj:
                     contents = lines.split(",")
                     if len(contents) == 2:
-                        self.nodes.append(Node(contents[0], contents[1]))
+                        self.nodes[contents[0]] = Node(contents[0], contents[1])
                     elif len(contents) > 2:
                         source = str(contents[0])
                         destination = str(contents[1])
                         rel_type = str(contents[2])
                         cost = str(contents[3])
                         delay = str(contents[4])
-                        for existingNode in self.nodes:
+
+                        for existingNode in self.nodes.values():
                             if existingNode.ID == source:
-                                existingNode.populateNode(destination, rel_type, cost,delay)
-                        self.edges.append(self.convert(source, destination))
+                                existingNode.add_edge(destination, cost, delay, rel_type)
                     else:
                         pass
-
-
         except IOError as error:
             return "Could not read file:\n" + error
         else:
             return "success"
 
+"""
     def convert(self, source, dest):
     	temp_list = dict()
     	temp_list["source"] = source
@@ -61,6 +59,6 @@ if __name__ == "__main__":
     app.extractData()
     app.get_JSON_data()
 
-    """with open("testFile.json") as json_file:
+    """ """with open("testFile.json") as json_file:
         data = json.load(json_file)
         print data[0]"""

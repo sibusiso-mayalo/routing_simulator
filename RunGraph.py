@@ -1,65 +1,41 @@
 from Node import *
 from Graph import *
+from Extract import *
 class RunGraph:
 
     def __init__(self, filename='testFile.txt'):
         self.filename = filename
-        self.nodes = dict()
-        self.extractData()
+        self.nodes = Extract(self.filename).nodes
 
-    def extractData(self):
-        try:
-            with open(self.filename) as fileObj:
-                for lines in fileObj:
-                    contents = lines.split(",")
-                    if len(contents) == 2:
-                        self.nodes[contents[0]] = Node(contents[0], contents[1])
-                    elif len(contents) > 2:
-                        source = str(contents[0])
-                        destination = str(contents[1])
-                        rel_type = str(contents[2])
-                        cost = str(contents[3])
-                        delay = str(contents[4])
+    def get_results(self, src, dest):
+        #This function takes a source and destination node adn calculate the path between them.
+        calculate_obj = Graph(self.nodes)
 
-                        for existingNode in self.nodes.values():
-                            if existingNode.ID == source:
-                                existingNode.add_edge(destination, cost, delay, rel_type)
-                    else:
-                        pass
-        except IOError as error:
-            return "Could not read file:\n" + error
+        came_from, cost = calculate_obj.calculate_path(run.nodes[src],run.nodes[dest])
+        path = calculate_obj.reconstruct_path(came_from, run.nodes[src],run.nodes[dest])#reverse the path
+
+        is_path_valid = calculate_obj.validate_rules(path)#enforce validation rules
+        final_data = dict()
+        if is_path_valid:
+            final_data['path'] = path
+            final_data['cost'] =  cost[path[-1]]
+            return final_data
         else:
-            return "success"
-
+            return is_path_valid
 if __name__ == '__main__':
-    print('Extracting data.....\n')
-    run = RunGraph()
-    calculate_obj = Graph(run.nodes)
-
-    total_cost = 0
-    path = str()
+    run = RunGraph('testFile.txt')
 
     while True:
-        print('Nodes : ')
-        for node in run.nodes.keys():
-            print(node)
+        source = raw_input("Enter start node: ")
+        destination = raw_input("enter destination node: ")
+        results = run.get_results(source, destination)
 
-        start = raw_input('\nEnter starting node: ')
-        dest = raw_input('\nenter destination node: ')
-
-        print('Calculating path......\n')
-        start = run.nodes[start]
-        dest = run.nodes[dest]
-
-        came_from, cost = calculate_obj.calculate_path(start, dest)
-        path = calculate_obj.reconstruct_path(came_from, start,dest)
-
-        is_path_valid = calculate_obj.validate_rules(path)
-        if is_path_valid:
-            print('Path : ', path)
-            print('Cost : ', cost[path[-1]])
-            quit = raw_input('Exit ? Y/N\n')
-            if quit =='Y':
-                break
+        if type(results) == 'str()':
+            print results
         else:
-            print is_path_valid
+            print 'Path is : ',results['path']
+            print 'Cost is : ',results['cost']
+
+        exit_code = raw_input('Exit? (Y / N): ')
+        if exit_code == 'Y':
+            break
