@@ -29,15 +29,15 @@ def remove():
     return render_template('remove.html', nodes = [nodes for nodes in graph.nodes])
 
 #This route is for removing a node from the network
-@app.route('/remove')
+@app.route('/remove', methods=["POST","GET"])
 def remove_node():
     if request.method =="POST":
         node = request.form['source'] #check this
-        for item in graph:
+        global graph
+        for item in graph.nodes:
             if item == str(node):
-                graph.remove(item)
-                break
-    return render_template('remove.html', body='Removed node successfully.')
+                del graph.nodes[item]
+                return render_template('graph.html',results='Removed node '+node+'successfully.', nodes=[nodes for nodes in graph.nodes])
 
 #this route renders the form to upload the dataset
 @app.route('/upload')
@@ -81,6 +81,10 @@ def get_nodes():
         except:
             #Either no path or there has been a validation of rules
             return render_template('graph.html', results=search_results, nodes=[nodes for nodes in graph.nodes] )
+
+    else:
+        global graph
+        return render_template('graph.html',nodes=[nodes for nodes in graph.nodes])
 
 def create_graph(filename):
     global graph
