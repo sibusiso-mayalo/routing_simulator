@@ -5,7 +5,12 @@ class RunGraph:
 
     def __init__(self, filename='testFile.txt'):
         self.filename = filename
-        self.nodes = Extract(self.filename).nodes
+        self.extractObject = Extract(self.filename)
+        self.nodes = self.extractObject.nodes
+
+    def add_node(self, node):
+        self.extractObject.add_node(node)
+        self.extractObject.write_to_json()
 
     def get_results(self, src, dest):
         #This function takes a source and destination node adn calculate the path between them.
