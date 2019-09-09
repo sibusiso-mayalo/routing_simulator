@@ -1,11 +1,14 @@
+from __future__ import print_function
 from flask import Flask, request, render_template, send_from_directory, url_for
 from werkzeug.utils import secure_filename
+import sys
 from FileHandler import *
 from Strings import *
 from RunGraph import *
 
 app = Flask(__name__)
 strings = String()
+graph = None
 
 #This route is for the home page
 @app.route('/')
@@ -15,10 +18,26 @@ def index():
     return render_template('welcome.html', name=body)
 
 #This route is for adding a new node to the existing network
-@app.route('/edit')
+@app.route('/add')
 def edit():
-    body = 'Add data body'
-    return render_template('addData.html', body=body)
+    body = strings.add_node
+    return render_template('addData.html', body=body, nodes = graph.nodes)
+
+#This route renders the remove node UI
+@app.route('/remove')
+def remove():
+    return render_template('remove.html', nodes = [nodes for nodes in graph.nodes])
+
+#This route is for removing a node from the network
+@app.route('/remove')
+def remove_node():
+    if request.method =="POST":
+        node = request.form['source'] #check this
+        for item in graph:
+            if item == str(node):
+                graph.remove(item)
+                break
+    return render_template('remove.html', body='Removed node successfully.')
 
 #this route renders the form to upload the dataset
 @app.route('/upload')
@@ -37,7 +56,9 @@ def sendFile():
 
         if file_handler.validate_file():
             upload.save(secure_filename(upload.filename))
-            return render_template('graph.html', body="<div id='graphHolder'></div> ")
+            create_graph(upload.filename)
+            nodes = [nodes for nodes in graph.nodes]
+            return render_template('graph.html', body="<div id='graphHolder'></div>", nodes=nodes)
         else:
             response = 'The file you have uploaded is not supported'
     else:
@@ -52,17 +73,19 @@ def get_nodes():
     if request.method =="POST":
         source_node = request.form['source']
         destination = request.form['destination']
-
-        search_results = RunGraph.get_results(source_node, destination)
-        if type(search_results) == 'dict()':
+        search_results = graph.get_results(source_node, destination)
+        try:
             path = search_results['path']
             cost = search_results['cost']
-            # send to JS to be displayed
-
-        else:
+            return render_template('graph.html', path=path, cost=cost, nodes=[nodes for nodes in graph.nodes])
+        except:
             #Either no path or there has been a validation of rules
-            #send validation error message to UI
-            print ""
+            return render_template('graph.html', results=search_results, nodes=[nodes for nodes in graph.nodes] )
+
+def create_graph(filename):
+    global graph
+    graph = RunGraph(filename)
+    return graph
 
 @app.route('/graph')
 def graph():
