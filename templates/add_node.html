@@ -1,0 +1,48 @@
+{% extends 'base_layout.html' %}
+{% block tittle %}
+    {{ "Index" }}
+{% endblock %}
+{% block body %}
+<form action='http://localhost:5000/add' method='POST'>
+
+        <label for='labe'>Parent node:</label>
+        <select name='parent' required>
+            {% for node in nodes %}
+            <option value='{{ node }}' >{{ node }}</option>
+            {% endfor %}
+        </select>
+
+        <label for='label'>From / Towards :</label>
+        <select name='from_to' required>
+            <option value='from'>from</option>
+            <option value='towards'>towards</option>
+        </select>
+
+        <label for='type_label'>Rel-Type:</label>
+        <select name='rel_type' required>
+            <option value='P'>Peer</option>
+            <option value='CP'>Customer-to-Provider</option>
+            <option value='PC'>Provide-to-Customer</option>
+        </select><br><br>
+
+        <label for='new'>Node Name:</label>
+        <input type='text' name='node_name'><br>
+
+        <label for='typ_label'>Rel-Type:</label>
+        <select name='type' required>
+            <option value='T1'>T1</option>
+            <option value='T2'>T2</option>
+            <option value='T3'>T3</option>
+            <option value='IX'>IX</option>
+        </select><br>
+
+        <label for='cost_label'>Cost:</label>
+        <input type="number" name='cost'><br>
+
+        <label for='delay_label'>Delay:</label>
+        <input type="number" name='delay'><br>
+
+        <br><br>
+        <input type="submit" value='Add node'>
+    </form>
+{% endblock %}
