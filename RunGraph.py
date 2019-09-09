@@ -11,8 +11,8 @@ class RunGraph:
         #This function takes a source and destination node adn calculate the path between them.
         calculate_obj = Graph(self.nodes)
 
-        came_from, cost = calculate_obj.calculate_path(run.nodes[src],run.nodes[dest])
-        path = calculate_obj.reconstruct_path(came_from, run.nodes[src],run.nodes[dest])#reverse the path
+        came_from, cost = calculate_obj.calculate_path(self.nodes[src],self.nodes[dest])
+        path = calculate_obj.reconstruct_path(came_from, self.nodes[src], self.nodes[dest])#reverse the path
 
         is_path_valid = calculate_obj.validate_rules(path)#enforce validation rules
         final_data = dict()

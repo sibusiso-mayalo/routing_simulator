@@ -1,0 +1,18 @@
+{% extends 'base_layout.html' %}
+{% block tittle %}
+    {{ "Remove" }}
+{% endblock %}
+{% block body %}
+<form action='http://localhost:5000/remove' method='POST'>
+
+        <label for='del_node'>Node:</label>
+        <select name='source' required>
+            {% for node in nodes %}
+            <option value='{{ node }}' SELECTED>{{ node }}</option>
+            {% endfor %}
+        </select>
+
+        <br><br>
+        <input type="submit" value='Remove'>
+    </form>
+ {% endblock %}

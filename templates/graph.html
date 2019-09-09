@@ -80,26 +80,44 @@
     d3.json("{{url_for('static', filename='testFile.json')}}", draw);
   </script>
   <div class='searchComponents' align='center'>
-      <label for='src'>Source</label>
-      <select name='source' required>
-          <option value=''></option>
+    <p>Search the graph below:</p>
+    <form method="POST" action="http://localhost:5000/graph" >
+      <label for="source_label">Source : </label>
+      <select name="source">
+        {% for node in nodes %}
+        <option value="{{ node }}">{{ node }}</option>
+        {% endfor %}
       </select>
 
       <br><br>
-      <label for='dest'>Desination</label>
-      <select name='destination' required>
-          <option value=''></option>
+      <label for="destination_label">Destination :</label>
+      <select name="destination">
+        {% for node in nodes %}
+        <option value="{{ node }}">{{ node }}</option>
+        {% endfor %}
       </select>
 
       <br><br>
-      <label for='crt'>Criteria</label>
-      <select name='criteria' required>
-          <option value=''></option>
+      <label for="search_label">Search criteria :</label>
+      <select name="criteria">
+        <option value="cost">cost</option>
+        <option value="delay">delay</option>
       </select>
+
       <br><br>
-      <button type="button">Search</button>
+      <input type="submit" value='Search'>
+    </form>
 
   </div>
+  <div class='results'>
+    {% if path %}
+      <label for="path">Path : {{ path }}</label> <br><br>
+      <label for="cost">Cost : {{ cost }}</label>
+    {% else %}
+    <label for="no_path">{{ results }}</label>
+    {% endif %}
+  </div>
+
 </body>
 <footer>
 	<p>&copy; NoName Group 2019. All rights reserved
