@@ -20,8 +20,35 @@ def index():
 #This route is for adding a new node to the existing network
 @app.route('/add')
 def edit():
-    body = strings.add_node
-    return render_template('addData.html', body=body, nodes = graph.nodes)
+    return render_template('add_node.html', nodes = graph.nodes)
+
+#This route is for processing user input when wanting to add a new node
+@app.route('/add', methods=["POST","GET"])
+def add():
+    if request.method =="POST":
+        try:
+            parent = request.form['parent']
+            from_to = request.form['from_to']
+            rel_type =request.form['rel_type']
+
+            new_node = request.form['node_name']
+            type = request.form['type']
+            cost = request.form['cost']
+            delay = request.form['delay']
+
+            new_node_obj = Node(str(new_node), type)
+
+            if from_to == 'from':
+                graph.nodes[str(parent)].add_edge(new_node_obj, cost, delay, rel_type)
+            else:
+                new_node_obj.add_edge(graph.nodes[str(parent)], cost, delay, rel_type)
+
+            graph.nodes[new_node] = new_node_obj
+            #now write this node to the json file so that it can be drawn on the graph
+            graph.add_node(graph.nodes[new_node])
+            return render_template('graph.html', nodes=[nodes for nodes in graph.nodes])
+        except Exception as e:
+            raise
 
 #This route renders the remove node UI
 @app.route('/remove')

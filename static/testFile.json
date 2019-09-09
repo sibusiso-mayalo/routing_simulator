@@ -1,34 +1,50 @@
 {
     "nodes": [
         {
-            "Type": " T1\n", 
-            "id": "ASN1"
-        }, 
-        {
-            "Type": " T1\n", 
-            "id": "ASN2"
-        }, 
-        {
-            "Type": " T2\n", 
-            "id": "ASN3"
-        }, 
-        {
-            "Type": " T3\n", 
+            "Type": "T3\n", 
             "id": "ASN4"
         }, 
         {
-            "Type": " T3\n", 
+            "Type": "T3\n", 
             "id": "ASN5"
         }, 
         {
-            "Type": " IX\n", 
+            "Type": "T1\n", 
+            "id": "ASN2"
+        }, 
+        {
+            "Type": "T2\n", 
+            "id": "ASN3"
+        }, 
+        {
+            "Type": "T1\n", 
+            "id": "ASN1"
+        }, 
+        {
+            "Type": "IX\n", 
             "id": "IXP1"
         }
     ], 
     "links": [
         {
-            "source": "ASN1", 
-            "target": "ASN2"
+            "source": "ASN4", 
+            "target": "ASN3"
+        }, 
+        {
+            "source": "ASN4", 
+            "target": "IXP1"
+        }, 
+        {
+            "source": "ASN5", 
+            "target": "ASN3"
+        }, 
+        {
+            "source": "ASN5", 
+            "target": "IXP1"
+        }, 
+        {
+            "source": "ASN2", 
+            "target": "ASN3"
         }, 
         {
             "source": "ASN2", 
@@ -36,35 +52,19 @@
         }, 
         {
             "source": "ASN3", 
-            "target": "ASN2"
-        }, 
-        {
-            "source": "ASN2", 
-            "target": "ASN3"
-        }, 
-        {
-            "source": "ASN4", 
-            "target": "ASN3"
-        }, 
-        {
-            "source": "ASN3", 
             "target": "ASN4"
-        }, 
-        {
-            "source": "ASN5", 
-            "target": "ASN3"
         }, 
         {
             "source": "ASN3", 
             "target": "ASN5"
         }, 
         {
-            "source": "ASN4", 
-            "target": "IXP1"
+            "source": "ASN3", 
+            "target": "ASN2"
         }, 
         {
-            "source": "ASN5", 
-            "target": "IXP1"
+            "source": "ASN1", 
+            "target": "ASN2"
         }
     ]
 }

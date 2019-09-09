@@ -1,3 +1,4 @@
+from __future__ import print_function
 from Node import *
 import json, sys
 class Extract:
@@ -6,6 +7,7 @@ class Extract:
         self.filename = filename
         self.nodes = dict()
         self.extractData()
+        self.write_to_json()
 
     def extractData(self):
         try:
@@ -31,34 +33,35 @@ class Extract:
         else:
             return "success"
 
-"""
-    def convert(self, source, dest):
+    def add_node(self, node):
+        self.nodes[node.ID] = node
+
+    def remove_node(self, node):
+        del self.nodes[node.ID]
+
+    def write_to_json(self):
+        edges =list()
+        nodes =list()
+
+        for key_parent, parent_object in self.nodes.items():
+            for key_link, value_link in parent_object.edges.items():
+                edges.append(self.convert_edge(key_parent, key_link))
+            nodes.append(self.convert_node(parent_object.type, key_parent))
+
+        with open('static/'+self.filename.split('.')[0]+'.json','w') as out:
+            out.write(json.dumps({'links':edges, 'nodes':nodes}, indent=4))
+
+    def convert_node(self, type, id):
+        temp_list = dict()
+    	temp_list["id"] = id
+    	temp_list["Type"]= type
+    	return temp_list
+
+    def convert_edge(self, source, dest):
     	temp_list = dict()
     	temp_list["source"] = source
     	temp_list["target"]= dest
     	return temp_list
 
-    def get_JSON_data(self):
-    	node_list = list()
-    	for node in self.nodes:
-    		node_list.append(node.getInfo())
-
-    	temp = dict()
-        temp["nodes"] = node_list
-        temp["links"] = self.edges
-
-        nodes = json.dumps(temp,indent=4)
-        #edges = json.dumps(self.edges,indent=4)
-
-        print nodes
-        with open(self.fileName.split(".")[0]+".json","w") as file:
-
-        	file.write(nodes)
 if __name__ == "__main__":
     app = Extract("testFile.txt")
-    app.extractData()
-    app.get_JSON_data()
-
-    """ """with open("testFile.json") as json_file:
-        data = json.load(json_file)
-        print data[0]"""
