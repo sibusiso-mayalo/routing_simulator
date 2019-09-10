@@ -1,5 +1,6 @@
 from __future__ import print_function
 from Node import *
+import datetime
 import json, sys
 class Extract:
 
@@ -49,7 +50,10 @@ class Extract:
             nodes.append(self.convert_node(parent_object.type, key_parent))
 
         with open('static/'+self.filename.split('.')[0]+'.json','w') as out:
+            #print(datetime.datetime.now().time(),file=sys.stdout)
+            print(json.dumps({'links':edges, 'nodes':nodes}, indent=4), file=sys.stdout)
             out.write(json.dumps({'links':edges, 'nodes':nodes}, indent=4))
+            out.close()
 
     def convert_node(self, type, id):
         temp_list = dict()
