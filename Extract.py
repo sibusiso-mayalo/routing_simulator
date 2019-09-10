@@ -11,6 +11,7 @@ class Extract:
         self.write_to_json()
 
     def extractData(self):
+        #extarct data from the nput file
         try:
             with open(self.filename) as fileObj:
                 for lines in fileObj:
@@ -41,6 +42,7 @@ class Extract:
         del self.nodes[node.ID]
 
     def write_to_json(self):
+        #write data to a json file
         edges =list()
         nodes =list()
 
@@ -50,18 +52,18 @@ class Extract:
             nodes.append(self.convert_node(parent_object.type, key_parent))
 
         with open('static/'+self.filename.split('.')[0]+'.json','w') as out:
-            #print(datetime.datetime.now().time(),file=sys.stdout)
-            print(json.dumps({'links':edges, 'nodes':nodes}, indent=4), file=sys.stdout)
             out.write(json.dumps({'links':edges, 'nodes':nodes}, indent=4))
             out.close()
 
     def convert_node(self, type, id):
+        #clean node info
         temp_list = dict()
     	temp_list["id"] = id
     	temp_list["Type"]= type
     	return temp_list
 
     def convert_edge(self, source, dest):
+        #clean link info
     	temp_list = dict()
     	temp_list["source"] = source
     	temp_list["target"]= dest
