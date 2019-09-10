@@ -8,6 +8,9 @@ class RunGraph:
         self.extractObject = Extract(self.filename)
         self.nodes = self.extractObject.nodes
 
+    def remove_node(self, node):
+        self.extractObject.remove_node(node)
+        
     def add_node(self, node):
         self.extractObject.add_node(node)
         self.extractObject.write_to_json()
