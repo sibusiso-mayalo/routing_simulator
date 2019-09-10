@@ -51,9 +51,9 @@ class Extract:
                 edges.append(self.convert_edge(key_parent, key_link))
             nodes.append(self.convert_node(parent_object.type, key_parent))
 
-        with open('static/'+self.filename.split('.')[0]+'.json','w') as out:
-            out.write(json.dumps({'links':edges, 'nodes':nodes}, indent=4))
-            out.close()
+        out=open("static/"+self.filename.split('.')[0]+".json","w")
+        out.write(json.dumps({'links':edges, 'nodes':nodes}, indent=4))
+        out.close()
 
     def convert_node(self, type, id):
         #clean node info

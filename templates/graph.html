@@ -8,65 +8,133 @@
     {
       //Dimention of the visualization
       var margin = {top:10, bottom:30, left:40,right:30},
-        width = 400 - margin.left - margin.right,
+        width = 800 - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
 
       //Container to hold the graph: Scalable Vector Graphics
       //Same size as our screen dimension above
       var svg = d3.select('#graphHolder')
         .append('svg')
-      	   .attr('width',width + margin.left + margin.right)
-      	   .attr('height',height + margin.top + margin.bottom)
-      	.append('g')
-      	   .attr('transform', 'translate('+margin.left+','+margin.top+')');
-      	//.style("border", "1px solid black");
+           .attr('width',width + margin.left + margin.right)
+           .attr('height',height + margin.top + margin.bottom)
+        .append('g')
+           .attr('transform', 'translate('+margin.left+','+margin.top+')');
 
-      		//Initialize the links
+
+        //.style("border", "1px solid black");
+
+          //Initialize the links
       var link = svg
-        .selectAll('line')
+        .selectAll('path')
         .data(data.links)
-      	.enter()
-      	.append('line')
-      	.style('stroke','#aaa');
+        .enter()
+        .append('line')
+        .attr("class", "link")
+         .attr("stroke", function(d) { 
+          if(d.target ==="ASN5"){
+          return "#FFF"
+        }else{
+          return "#000"}});
 
-      		//Initialize nodes
+
+          //Initialize nodes
+      var color = d3.scaleOrdinal(d3.schemeCategory20);
+      
       var node = svg.selectAll('circle')
-      	.data(data.nodes)
-      	.enter()
-      	.append('circle')
+        .data(data.nodes)
+        .enter()
+        .append('circle')
         .attr('r', 20)
-        .style('fill', '#69b3a2');
+        .attr("fill", function(d) { return color(d.Type); })
+        .attr("stroke", function(d) { return color(d.id); });
+        
 
-      var text = svg.append("g")
+      
+          
+          //Listing the force that will be applied on the network
+      var simulation = d3.forceSimulation(data.nodes)
+        .force('link', d3.forceLink()
+        .id(function(d){return d.id;})
+        .links(data.links))
+        .force('charge', d3.forceManyBody().strength(-400))
+        .force('center', d3.forceCenter(width/2, height/2))
+        .on('tick', ticked)
+        .on('end',printt);
+         node.selectAll("text")
+      .data(data.nodes)
+      .text(function(d) { return d.id; });
+        
+ 
+
+
+    node.append("title")
+      .text(function(d) { return d.id; });
+
+      
+      function printt(){
+        text = svg.append("g")
         .selectAll("text")
         .data(data.nodes)
         .enter().append("text")
-        .attr("dx", 12)
-        .attr("dy", ".35em")
+        .attr("dx", function(d){return d.x;})
+        .attr("dy",  function(d){return d.y ;})
         .text(function(d) { return d.id });
-
-      		//Listing the force that will be applied on the network
-      var simulation = d3.forceSimulation(data.nodes)
-      	.force('link', d3.forceLink()
-      	.id(function(d){return d.id;})
-      	.links(data.links))
-      	.force('charge', d3.forceManyBody().strength(-400))
-      	.force('center', d3.forceCenter(width/2, height/2))
-        .on('end', ticked);
-
+      }
       function ticked()
       {
         link
           .attr('x1', function(d){return d.source.x;})
-      		.attr('y1', function(d){return d.source.y;})
-      		.attr('x2', function(d){return d.target.x;})
-      		.attr('y2', function(d){return d.target.y;});
-
-      	node
+          .attr('y1', function(d){return d.source.y;})
+          .attr('x2', function(d){return d.target.x;})
+          .attr('y2', function(d){return d.target.y;})
+          .on("click",click);
+        node
           .attr('cx', function(d){return d.x + 6;})
-      		.attr('cy', function(d){return d.y - 6;});
+          .attr('cy', function(d){return d.y - 6;})
+          .call(d3.drag()
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended));
+          
+          
+
+
       }
+    function dragstarted(d) {
+    if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+    d.fx = d.x;
+    d.fy = d.y;
+    text = svg.append("g")
+        .selectAll("text")
+        .data(data.nodes)
+        .enter().append("text")
+        .attr("dx", function(d){return d.x;})
+        .attr("dy",  function(d){return d.y ;})
+        .text(function(d) { return null });
+}
+
+function dragged(d) {
+  d.fx = d3.event.x;
+  d.fy = d3.event.y;
+}
+
+function dragended(d) {
+  if (!d3.event.active) simulation.alphaTarget(0);
+  d.fx = null;
+  d.fy = null;
+}
+function click(d) {
+ text = svg.append("g")
+        .selectAll("text")
+        .data(data.links)
+        .enter().append("text")
+        .attr("dx", function(d){return d.source.x + 8;})
+        .attr("dy",  function(d){return d.source.x - 6;})
+        .text(function(d) { return d.source });
+}
     }
+ 
+    
   </script>
   <nav>
     <h1>Inter-domain Routing Simulator</h1>
@@ -80,6 +148,7 @@
     d3.json("{{url_for('static', filename='testFile.json')}}", draw);
   </script>
   <div class='searchComponents' align='center'>
+<<<<<<< Updated upstream
     <p>Search the graph below:</p>
     <form method="POST" action="http://localhost:5000/graph" >
       <label for="source_label">Source : </label>
@@ -95,6 +164,25 @@
         {% for node in nodes %}
         <option value="{{ node }}">{{ node }}</option>
         {% endfor %}
+=======
+      <label for='src'>Source</label>
+      <select name='source' required>
+          <option value='scroll'>none</option>
+          <option value='scroll2'>ASN1</option>
+          <option value='scroll3'>ASN2</option>
+          <option value='scroll4'>ASN3</option>
+          <option value='scroll5'>ASN4</option>
+      </select>
+
+      <br><br>
+      <label for='dest'>Desination</label>
+      <select name='destination' required>
+          <option value='scroll'>none</option>
+          <option value='scroll'>none1</option>
+          <option value='scroll'>none2</option>
+          <option value='scroll'>none3</option>
+          <option value='scroll'>none4</option>
+>>>>>>> Stashed changes
       </select>
 
       <br><br>
@@ -120,6 +208,6 @@
 
 </body>
 <footer>
-	<p>&copy; NoName Group 2019. All rights reserved
+  <p>&copy; NoName Group 2019. All rights reserved
 </footer>
 </html>

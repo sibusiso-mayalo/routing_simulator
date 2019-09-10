@@ -118,7 +118,8 @@ def create_graph(filename):
     graph = RunGraph(filename)
     return graph
 
-@app.route('/graph')
+@app.route('/graphs')
 def graph():
     send_from_directory('static','testFile.json')
     return render_template('graph.html')
+
