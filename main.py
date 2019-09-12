@@ -36,16 +36,18 @@ def add():
             cost = request.form['cost']
             delay = request.form['delay']
 
-            new_node_obj = Node(str(new_node), type)
+            new_node_obj = Node(str(new_node), str(type))
 
             if from_to == 'from':
-                graph.nodes[str(parent)].add_edge(new_node_obj, cost, delay, rel_type)
+                graph.nodes[str(parent)].add_edge(new_node_obj.ID, cost, delay, rel_type)
+                print('FROM done')
             else:
-                new_node_obj.add_edge(graph.nodes[str(parent)], cost, delay, rel_type)
+                new_node_obj.add_edge(graph.nodes[str(parent)].ID, cost, delay, rel_type)
+                print("Not from")
 
-            graph.nodes[new_node] = new_node_obj
+            #graph.nodes[new_node] = new_node_obj
             #now write this node to the json file so that it can be drawn on the graph
-            graph.add_node(graph.nodes[new_node])
+            graph.add_node(new_node_obj)
             return render_template('graph.html', nodes=[nodes for nodes in graph.nodes])
         except Exception as e:
             raise
@@ -122,4 +124,3 @@ def create_graph(filename):
 def graph():
     send_from_directory('static','testFile.json')
     return render_template('graph.html')
-
