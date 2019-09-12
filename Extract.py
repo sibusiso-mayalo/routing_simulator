@@ -51,6 +51,8 @@ class Extract:
                 edges.append(self.convert_edge(key_parent, key_link))
             nodes.append(self.convert_node(parent_object.type, key_parent))
 
+        #print(json.dumps({'links':edges, 'nodes':nodes}, indent=4))
+
         out=open("static/"+self.filename.split('.')[0]+".json","w")
         out.write(json.dumps({'links':edges, 'nodes':nodes}, indent=4))
         out.close()
@@ -71,3 +73,11 @@ class Extract:
 
 if __name__ == "__main__":
     app = Extract("testFile.txt")
+    print ('Adding node : ')
+
+    node = Node('Sbusiso', 'T1')
+    node.add_edge('ASN5',1,0,'PC')
+    app.add_node(node)
+
+    print ('Added node\n')
+    app.write_to_json()
