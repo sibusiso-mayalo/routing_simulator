@@ -3,29 +3,19 @@ from RunGraph import *
 from Node import *
 class TestDeletion(unittest.TestCase):
 
-    def setUp(self, node='ASN1', filename='testFile.txt'):
-        self.filename = filename
-        self.graph = RunGraph('testFile.txt')
-        self.list = self.get_node_list()
-        self.to_be_removed = Node(node, '')
-
-    def get_node_list(self):
-        #return sorted list of nodes
-        return [node for node in self.graph.nodes].sort()[:]
-
     def test_delete(self):
-        #all nodes
-        extractObject = Extract(self.filename)
+        #Node to be deleted
+        node = Node('ASN1','')
 
-        #deleting node as the application would
-        extractObject.remove_node(self.to_be_removed)
-        nodes = [items for items in extractObject.nodes]
+        #Manual deletion of a node
+        extractObject = Extract('testFile.txt')
+        del extractObject.nodes[node.ID]
+        nodes = [items for items in extractObject.nodes].sort()
 
-        self.list.remove(self.to_be_removed.ID)
-        self.assertEqual(self.list, nodes.sort())
-
-    def tearDown(self):
-        self.graph=None
+        #Deletion as the application would
+        self.graph = RunGraph('testFile.txt')
+        self.graph.remove_node(node)
+        self.assertEqual([x for x in self.graph.nodes].sort(), nodes)
 
 if __name__ == '__main__':
     #run test
